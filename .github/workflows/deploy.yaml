@@ -26,4 +26,4 @@ jobs:
           context: .  
           file: ./dockerfile
           push: true
-          tags: ${{ secrets.USER_NAME }}/test
+          tags: ${{ secrets.USER_NAME }}/sleepycats

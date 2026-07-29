@@ -1,40 +1,60 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import { FaCat } from "react-icons/fa";
-import Order from './Order';
+import Order from "./Order";
 
-const showOrders = (props) => {
-    return (<div>
-        {props.orders.map(el => (
-            <Order onDelete={props.onDelete} key={el.id} item={el} />
-        ))}
-    </div>)
-}
-const showNothing = () => {
-    return (<div className='empty'>
-        <p>Котят нет</p>
-    </div>)
+function formatPrice(value) {
+  return `${value.toLocaleString("ru-RU")} ₽`;
 }
 
+export default function Header({ orders, onDelete }) {
+  const [cartOpen, setCartOpen] = useState(false);
+  const total = orders.reduce((sum, item) => sum + item.price, 0);
 
-export default function Header(props) {
-    let[cartOpen, setCartOpen] = useState(false)
-    return (
-        <header>
-            <div>
-                <span className='logo'>Balance</span>
-                <ul className='nav'>
-                    <li>Свяжитесь с нами</li>
-                    <li>Контакты</li>
-                </ul>
-                <FaCat onClick={() => setCartOpen(cartOpen = !cartOpen)} className={`shop-cart-button ${cartOpen && 'active'}`}/>
+  return (
+    <header>
+      <div className="header-bar">
+        <span className="logo">SleepyCats</span>
+        <ul className="nav">
+          <li>О нас</li>
+          <li>Контакты</li>
+        </ul>
+        <button
+          type="button"
+          className={`shop-cart-button ${cartOpen ? "active" : ""}`}
+          onClick={() => setCartOpen((open) => !open)}
+          aria-label="Открыть корзину"
+        >
+          <FaCat />
+          {orders.length > 0 && (
+            <span className="cart-badge">{orders.length}</span>
+          )}
+        </button>
 
-                {cartOpen && (
-                    <div className='shop-cart'>
-                        {props.orders.length > 0 ? showOrders(props) : showNothing()}
-                    </div>
-                )}
-            </div>
-            <div className='presentation'></div>
-        </header>
-    )
+        {cartOpen && (
+          <div className="shop-cart">
+            {orders.length > 0 ? (
+              <>
+                {orders.map((el) => (
+                  <Order onDelete={onDelete} key={el.id} item={el} />
+                ))}
+                <div className="cart-total">
+                  <span>Итого</span>
+                  <strong>{formatPrice(total)}</strong>
+                </div>
+              </>
+            ) : (
+              <div className="empty">
+                <p>Корзина пуста</p>
+                <span>Добавьте котёнка из каталога</span>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+      <div className="presentation" role="img" aria-label="Спящий котёнок">
+        <p className="presentation-title">Никакого</p>
+        <p className="presentation-subtitle">проснутия</p>
+      </div>
+    </header>
+  );
 }

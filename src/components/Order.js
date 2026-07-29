@@ -1,15 +1,35 @@
-import React, { Component } from 'react'
-import { FaTrash} from 'react-icons/fa'
+import React, { Component } from "react";
+import { FaTrash } from "react-icons/fa";
+
+function formatPrice(value) {
+  return `${value.toLocaleString("ru-RU")} ₽`;
+}
+
 export class Order extends Component {
   render() {
+    const { item, onDelete } = this.props;
+
     return (
-      <div className='item'>
-        <h2>{this.props.item.title}</h2>
-        <p>{this.props.item.description}</p>
-        <FaTrash className='delete-icon' onClick={() => this.props.onDelete(this.props.item.id)}/>
+      <div className="cart-item">
+        <div
+          className="cart-item-photo"
+          style={{ backgroundImage: `url(${item.img})` }}
+        />
+        <div className="cart-item-info">
+          <h2>{item.title}</h2>
+          <p>{formatPrice(item.price)}</p>
+        </div>
+        <button
+          type="button"
+          className="delete-icon"
+          onClick={() => onDelete(item.id)}
+          aria-label={`Удалить ${item.title}`}
+        >
+          <FaTrash />
+        </button>
       </div>
-    )
+    );
   }
 }
 
-export default Order
+export default Order;
